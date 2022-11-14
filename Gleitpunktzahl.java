@@ -41,6 +41,9 @@ public class Gleitpunktzahl {
     private static int maxExponent = (int) Math.pow(2, sizeExponent) - 1;
     private static int expOffset = (int) Math.pow(2, sizeExponent - 1) - 1;
 
+    private static int highestExponent = (int) (Math.pow(2, sizeExponent) / 2) -1;
+    private static int lowestExponent = (int) maxExponent;
+
     /**
      * Falls die Anzahl der Bits der Mantisse noch nicht gesperrt ist, so wird
      * sie auf abm gesetzt und gesperrt
@@ -74,6 +77,11 @@ public class Gleitpunktzahl {
     public static int getSizeMantisse() {
         return sizeMantisse;
     }
+    /** Liefert höchst mögliche Zahl der Mantisse */
+    public static int getMaxNumberMantisse() {
+        return (int) Math.pow(2, sizeMantisse) - 1;
+    }
+    
 
     /** Liefert die Anzahl der Bits des Exponenten */
     public static int getSizeExponent() {
@@ -287,6 +295,16 @@ public class Gleitpunktzahl {
      * Ergebnis nach Definition gerundet werden.
      *
      * Beispiel: Bei 3 Mantissenbits wird die Zahl 10.11 * 2^-1 zu 1.10 * 2^0
+     * Mantisse = 1011, Ecponent = -1
+     * 101 
+     * Mantisse = 0110, exponent = 0
+     * 
+     * 100.11 -> 10.10 -> 10.1
+     * 100.11 -> 10.01 -> 10.1
+     * 
+     * 
+     * 100.01 -> 10.01 -> 1.01
+     * 100.01 -> 10.00 -> 1.01
      */
     public void normalisiere() {
         /*
@@ -296,6 +314,21 @@ public class Gleitpunktzahl {
          * ist.
          * Achten Sie auf Sonderfaelle!
          */
+        if( isInfinite() || isNaN() || isNull() ) return;
+
+        if(mantisse > getMaxNumberMantisse()) {
+        while(mantisse > getMaxNumberMantisse()) {
+            int rightestBit = mantisse % 2 == 0 ? 0 : 1;
+            mantisse >>= 1;
+            exponent += 1;
+        }
+        }
+        else {
+            while (mantisse < sizeMantisse) {
+                mantisse <<= 1;
+            }
+        }
+
     }
 
     /**
@@ -307,6 +340,25 @@ public class Gleitpunktzahl {
         /*
          * TODO: hier ist die Operation denormalisiere zu implementieren.
          */
+        if(a.compareAbsTo(b) == 1) {
+            int diff = a.exponent - b.exponent;
+            if(diff > 0) {
+                a.mantisse <<= diff;
+                a.exponent -= diff; 
+            }else {
+                a.mantisse >>= diff;
+                a.exponent += diff; 
+            }
+        } else {
+            int diff = a.exponent - b.exponent;
+            if(diff > 0) {
+                b.mantisse <<= diff;
+                b.exponent -= diff; 
+            }else {
+                b.mantisse >>= diff;
+                b.exponent += diff; 
+            }
+        }
     }
 
     /**
@@ -321,8 +373,12 @@ public class Gleitpunktzahl {
          * Funktionen normalisiere und denormalisiere.
          * Achten Sie auf Sonderfaelle!
          */
+        denormalisiere(this, r);
+        Gleitpunktzahl result = new Gleitpunktzahl();
 
-        return null;
+
+        result.normalisiere();
+        return result;
     }
 
     /**
