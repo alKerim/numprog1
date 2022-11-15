@@ -316,18 +316,18 @@ public class Gleitpunktzahl {
          */
         if( isInfinite() || isNaN() || isNull() ) return;
 
-        if(mantisse > getMaxNumberMantisse()) {
         while(mantisse > getMaxNumberMantisse()) {
             int rightestBit = mantisse % 2 == 0 ? 0 : 1;
             mantisse >>= 1;
+            mantisse += rightestBit;
             exponent += 1;
         }
-        }
-        else {
-            while (mantisse < sizeMantisse) {
+        
+            while (mantisse < (int) Math.pow(2, sizeMantisse - 1)) {
                 mantisse <<= 1;
+                exponent -= 1;
             }
-        }
+        
 
     }
 
@@ -343,20 +343,20 @@ public class Gleitpunktzahl {
         if(a.compareAbsTo(b) == 1) {
             int diff = a.exponent - b.exponent;
             if(diff > 0) {
-                a.mantisse <<= diff;
-                a.exponent -= diff; 
-            }else {
                 a.mantisse >>= diff;
                 a.exponent += diff; 
+            }else {
+                a.mantisse <<= diff;
+                a.exponent -= diff; 
             }
         } else {
             int diff = a.exponent - b.exponent;
             if(diff > 0) {
-                b.mantisse <<= diff;
-                b.exponent -= diff; 
-            }else {
                 b.mantisse >>= diff;
                 b.exponent += diff; 
+            }else {
+                b.mantisse <<= diff;
+                b.exponent -= diff; 
             }
         }
     }
@@ -373,9 +373,33 @@ public class Gleitpunktzahl {
          * Funktionen normalisiere und denormalisiere.
          * Achten Sie auf Sonderfaelle!
          */
-        denormalisiere(this, r);
-        Gleitpunktzahl result = new Gleitpunktzahl();
 
+        // Vorzeichen setzen
+        if(this.vorzeichen) {
+            if(r.vorzeichen) {
+                r.vorzeichen = false;
+                this.vorzeichen = false;
+                // weiter
+            } else {
+                return r.sub(this);
+            }
+        } else {
+            if(r.vorzeichen) {
+                return this.sub(r);
+            } else {
+                // weiter
+            }
+        }
+        
+        // jetzt sicher dass beide zahlen positiv
+        System.out.println("Denormalisiere: " + this.toString() + " and " + r.toString());
+        denormalisiere(this, r);
+        System.out.println("Denormalisiert: " + this.toString() + " and " + r.toString());
+
+        Gleitpunktzahl result = new Gleitpunktzahl(r);
+
+
+        result.mantisse += this.mantisse;
 
         result.normalisiere();
         return result;
@@ -394,7 +418,38 @@ public class Gleitpunktzahl {
          * Achten Sie auf Sonderfaelle!
          */
 
-        return null;
+        // Vorzeichen setzen
+        if(this.vorzeichen) {
+            if(r.vorzeichen) {
+                r.vorzeichen = false;
+                this.vorzeichen = false;
+                return r.sub(this);
+            } else {
+                this.vorzeichen = false;
+                Gleitpunktzahl result = this.add(r);
+                result.vorzeichen = true;
+                return result;
+            }
+        } else {
+            if(r.vorzeichen) {
+                r.vorzeichen = false;
+                return this.add(r);
+            } else {
+                // Weiter
+            }
+        }
+
+        // jetzt sicher, dass (positiv) - (negativ)
+
+        System.out.println("Denormalisiere: " + this.toString() + " and " + r.toString());
+        denormalisiere(this, r);
+        System.out.println("Denormalisiert: " + this.toString() + " and " + r.toString());
+
+        Gleitpunktzahl result = new Gleitpunktzahl(this);
+        result.mantisse -= r.mantisse;
+
+        result.normalisiere();
+        return result;
     }
 
     /**

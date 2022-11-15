@@ -99,6 +99,7 @@ public class Test_Gleitpunktzahl {
             System.out.println("Test: Subtraktion  x - y");
             x = new Gleitpunktzahl(3.25);
             y = new Gleitpunktzahl(2.75);
+            System.out.println("Test: Subtraktion " + x.toString() + " - " + y.toString());
 
             // Referenzwerte setzen
             gleitref = new Gleitpunktzahl((3.25 - 2.75));
@@ -134,6 +135,7 @@ public class Test_Gleitpunktzahl {
             System.out.println("Test: Sonderfaelle");
             x = new Gleitpunktzahl(0.0);
             y = new Gleitpunktzahl(1.0 / 0.0);
+            System.out.println("Test: " + x.toString() + " - " + y.toString());
 
             // Referenzwerte setzen
             gleitref.setInfinite(true);
