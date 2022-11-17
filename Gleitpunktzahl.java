@@ -329,18 +329,32 @@ public class Gleitpunktzahl {
         if (isInfinite() || isNaN() || isNull())
             return;
 
-        int rightestBit = mantisse % 2 == 0 ? 0 : 1;
+    
         while (mantisse > getMaxNumberMantisse()) {
+            int rightestBit = mantisse % 2 == 0 ? 0 : 1;
             mantisse >>= 1;
             mantisse += rightestBit;
             exponent += 1;
         }
-        
 
         while (mantisse < getMinNumberMantisse()) {
+            if(mantisse == 0) {
+                break;
+            }
             mantisse <<= 1;
             exponent -= 1;
         }
+
+        // Sonderfälle filtern
+        if(mantisse == 0 && exponent == 0) this.setNull();
+        else if(isInfinite()) this.setInfinite(vorzeichen);
+        else if(isNaN()) {
+            this.setNaN();
+        } else if(exponent > maxExponent) {
+            this.setNaN();
+        } else if(exponent < 0) {
+            this.setNaN();
+        } 
 
     }
 
@@ -354,24 +368,17 @@ public class Gleitpunktzahl {
         /*
          * TODO: hier ist die Operation denormalisiere zu implementieren.
          */
+        if(a.compareAbsTo(b) == 0 || a.exponent == b.exponent) return;
+
+        int diff = a.exponent - b.exponent;
         if (a.compareAbsTo(b) >= 1) {
-            int diff = a.exponent - b.exponent;
-            if (diff > 0) {
-                b.mantisse >>= diff;
-                b.exponent += diff;
-            } else {
-                b.mantisse <<= diff;
-                b.exponent -= diff;
-            }
+            a.mantisse <<= diff;
+            a.exponent -= diff;
+             
         } else {
-            int diff = b.exponent - a.exponent;
-            if (diff > 0) {
-                a.mantisse >>= diff;
-                a.exponent += diff;
-            } else {
-                a.mantisse <<= diff;
-                a.exponent -= diff;
-            }
+            diff = -diff;
+            b.mantisse <<= diff;
+            b.exponent -= diff;
         }
 
         //System.out.println("Nach Denormalisiert: " + a.toString() + " and " + b.toString());
@@ -512,5 +519,25 @@ public class Gleitpunktzahl {
         this.vorzeichen = false;
         this.exponent = maxExponent;
         this.mantisse = 1;
+    }
+
+    public String realToString() {
+        StringBuffer s = new StringBuffer();
+        for (int i = 32 - Integer.numberOfLeadingZeros(this.mantisse) - 1; i >= 0; i--) {
+            if (i == sizeMantisse - 2)
+                s.append(',');
+            if (((this.mantisse >> i) & 1) == 1)
+                s.append('1');
+            else
+                s.append('0');
+        }
+        s.append(" * 2^(");
+        s.append(this.exponent);
+        s.append("-");
+        s.append(expOffset);
+        s.append(")");
+
+        String vorz = vorzeichen ? "- " : " ";
+        return vorz + s.toString();
     }
 }

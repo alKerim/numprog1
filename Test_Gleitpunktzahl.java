@@ -1,4 +1,6 @@
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Test_Gleitpunktzahl {
 /**
@@ -19,6 +21,9 @@ public class Test_Gleitpunktzahl {
         System.out.println("-----------------------------------------");
         System.out.println("Test der Klasse Gleitpunktzahl");
 
+
+        int numberOfFaults = 0;
+
         /*
          * Verglichen werden die BitFelder fuer Mantisse und Exponent und das
          * Vorzeichen
@@ -31,6 +36,17 @@ public class Test_Gleitpunktzahl {
         Gleitpunktzahl gleitref = new Gleitpunktzahl();
         Gleitpunktzahl gleiterg;
 
+        // Standardwerte to use
+        Gleitpunktzahl negInf = new Gleitpunktzahl();
+        negInf.setInfinite(true);
+        Gleitpunktzahl posInf = new Gleitpunktzahl();
+        posInf.setInfinite(false);
+        Gleitpunktzahl nan = new Gleitpunktzahl();
+        nan.setNaN();
+        Gleitpunktzahl nullGleit = new Gleitpunktzahl();
+        nullGleit.setNull();
+
+
         /* Test von setDouble */
         System.out.println("Test von setDouble");
         try {
@@ -39,6 +55,8 @@ public class Test_Gleitpunktzahl {
 
             // Referenzwerte setzen
             gleitref = new Gleitpunktzahl(0.5);
+
+            System.out.println("Expected: " + gleitref.toString() + " , Result: " + x.toString());
 
             // Test, ob Ergebnis korrekt
             if (x.compareAbsTo(gleitref) != 0
@@ -53,6 +71,19 @@ public class Test_Gleitpunktzahl {
              */
 
             System.out.println("\n\nEIGENE TESTS EINFÜGEN!!!!!!!\n\n");
+            
+            // Input, Expected
+            Map<Gleitpunktzahl, Gleitpunktzahl> inputAndExpected = new HashMap<>();
+            // inputAndExpected.put(new Gleitpunktzahl(0.5), new Gleitpunktzahl(0.5));
+            // inputAndExpected.put(new Gleitpunktzahl(3.9), nan);
+            // inputAndExpected.put(new Gleitpunktzahl(1.0/0.0), posInf);
+            // inputAndExpected.put(new Gleitpunktzahl(-4.0), nan);
+            inputAndExpected.put(new Gleitpunktzahl(1.5).add(new Gleitpunktzahl(-3.5)), new Gleitpunktzahl(-2.0));
+   
+            
+            testSetDouble(inputAndExpected);
+
+
 
         } catch (Exception e) {
             System.out.print("Exception bei der Auswertung des Ergebnis!!\n");
@@ -63,14 +94,16 @@ public class Test_Gleitpunktzahl {
         try {
             // Test: Addition
             System.out.println("Test: Addition  x + y");
-            x = new Gleitpunktzahl(3.25);
+            x = new Gleitpunktzahl(3.5);
             y = new Gleitpunktzahl(0.5);
 
             // Referenzwerte setzen
-            gleitref = new Gleitpunktzahl(3.25 + 0.5);
+            gleitref = new Gleitpunktzahl(3.5 + 0.5);
+            System.out.println(gleitref.toString());
 
             // Berechnung
             gleiterg = x.add(y);
+            System.out.println(gleiterg.toString());
 
             // Test, ob Ergebnis korrekt
             if (gleiterg.compareAbsTo(gleitref) != 0
@@ -98,11 +131,11 @@ public class Test_Gleitpunktzahl {
             // Test: Addition
             System.out.println("Test: Subtraktion  x - y");
             x = new Gleitpunktzahl(3.25);
-            y = new Gleitpunktzahl(2.75);
+            y = new Gleitpunktzahl(3.5);
             System.out.println("Test: Subtraktion " + x.toString() + " - " + y.toString());
 
             // Referenzwerte setzen
-            gleitref = new Gleitpunktzahl((3.25 - 2.75));
+            gleitref = new Gleitpunktzahl((3.25 - 3.5));
 
             // Berechnung
             gleiterg = x.sub(y);
@@ -180,5 +213,26 @@ public class Test_Gleitpunktzahl {
     private static void printErg(String erg, String checkref) {
         System.out.println("      Ihr Ergebnis lautet:           " + erg
                 + "\n      Das Korrekte Ergebnis lautet:  " + checkref + "\n");
+    }
+
+
+    private static boolean compareResultAndExpected(Gleitpunktzahl result, Gleitpunktzahl expected) {
+        if(expected.vorzeichen != result.vorzeichen) return false;
+        if(expected.compareAbsTo(result) != 0) return false;
+        else return true;
+    }
+
+    private static void testSetDouble(Map<Gleitpunktzahl, Gleitpunktzahl> map) {
+        for (Map.Entry<Gleitpunktzahl, Gleitpunktzahl> entry : map.entrySet()) {
+            String ergebnis = "";
+            if(compareResultAndExpected(entry.getKey(), entry.getValue())) {
+                ergebnis = "Richtig! ";
+            } else {
+                ergebnis = "Falsch! ";
+            }
+
+            System.out.println(ergebnis + "Expected: " + entry.getValue().realToString() + " , Result: " + entry.getKey().realToString());
+        }
+        System.out.println("\n\n");
     }
 }
