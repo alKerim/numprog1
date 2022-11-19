@@ -52,7 +52,6 @@ public class Test_Gleitpunktzahl {
              * Eigene Tests einfuegen
              */
 
-            System.out.println("\n\nEIGENE TESTS EINFÜGEN!!!!!!!\n\n");
 
         } catch (Exception e) {
             System.out.print("Exception bei der Auswertung des Ergebnis!!\n");

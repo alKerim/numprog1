@@ -38,7 +38,7 @@ public class Test_FastInverse {
         float[] xData = new float[numOfSamplingPts];
         float[] yData = new float[numOfSamplingPts];
         float x = 0.10f;
-        //  Eigene Test :
+        //  Eigene FastMath Test :
         for (int i =-1; i < 20; i++) {
             Gleitpunktzahl testFastInverse = new Gleitpunktzahl(i);
             System.out.println("Eingabe: "+ 1/Math.sqrt(i) + " Ausgabe: "+ FastMath.invSqrt(testFastInverse).toDouble() +" "+ testFastInverse.toDouble());

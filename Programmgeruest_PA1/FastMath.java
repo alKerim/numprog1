@@ -45,7 +45,6 @@ public class FastMath {
      */
     public static Gleitpunktzahl invSqrt(Gleitpunktzahl x) {
 
-        /* TODO: hier den "fast inverse square root" Algorithmus implementieren */
         if (x.isNull()){
             x.setInfinite(false);
             return x;

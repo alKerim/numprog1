@@ -395,8 +395,6 @@ public class Gleitpunktzahl {
      */
     public Gleitpunktzahl add(Gleitpunktzahl r) {
         /*
-         * TODO: hier ist die Operation add zu implementieren. Verwenden Sie die
-         * Funktionen normalisiere und denormalisiere.
          * Achten Sie auf Sonderfaelle!
          */
         // der Sonderfall NaN wird nicht betrachtet
