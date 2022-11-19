@@ -45,6 +45,10 @@ public class FastMath {
      */
     public static Gleitpunktzahl invSqrt(Gleitpunktzahl x) {
 
+        if (x.isNaN() || x.vorzeichen){
+            x.setNaN();
+            return x;
+        }
         if (x.isNull()){
             x.setInfinite(false);
             return x;
@@ -53,11 +57,8 @@ public class FastMath {
             x.setNull();
             return x;
         }
-            // 16 wird als nan gezählt ?
-        if (x.isNaN() || x.vorzeichen){
-            x.setNaN();
-            return x;
-        }
+
+
         setMagic(2670>>1);
         int ieee= gleitpunktzahlToIEEE(x);
         ieee >>=1;

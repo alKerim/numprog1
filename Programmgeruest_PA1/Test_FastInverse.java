@@ -45,7 +45,8 @@ public class Test_FastInverse {
             System.out.println(FastMath.absInvSqrtErr(testFastInverse) + " "+(FastMath.relInvSqrtErr(testFastInverse)));
             System.out.println();
         }
-
+        Gleitpunktzahl testFastInverse = new Gleitpunktzahl(-1.0/0.0);
+        System.out.println("Eingabe: "+ 1/Math.sqrt(-1.0/0.0) + " Ausgabe: "+ FastMath.invSqrt(testFastInverse).toDouble() +" "+ testFastInverse.toDouble());
         /* calculate data to plot */
         for (int i = 0; i < numOfSamplingPts; i++) {
             xData[i] = x;
