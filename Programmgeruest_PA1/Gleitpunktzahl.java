@@ -326,26 +326,25 @@ public class Gleitpunktzahl {
          * Achten Sie auf Sonderfaelle!
          */
         if (isInfinite() || isNaN()  ) return;
+
         while (mantisse > getMaxNumberMantisse()) {
             int rightestBit = mantisse % 2 == 0 ? 0 : 1;
             mantisse >>= 1;
             mantisse += rightestBit;
             exponent += 1;
         }
-
+        if (isNaN()){
+            setNaN();
+            return;
+        }
 
         while (mantisse < getMinNumberMantisse()) {
-            if(mantisse == 0) {
+            if(exponent == 0) {
+                this.setNull();
                 break;
             }
             mantisse <<= 1;
             exponent -= 1;
-        }
-
-        if (exponent <0) {
-            //betrachte der fall, wo e'==-1, da wir mit e'= e-1 arbeiten
-            this.setNull();
-            return;
         }
         // Sonderfälle filtern
        if ( exponent>=maxExponent) this.setInfinite(vorzeichen);

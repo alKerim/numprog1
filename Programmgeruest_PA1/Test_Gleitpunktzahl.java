@@ -80,12 +80,21 @@ public class Test_Gleitpunktzahl {
             // inputAndExpected.put(new Gleitpunktzahl(-4.0), nan);
             // inputAndExpected.put(new Gleitpunktzahl(1.5).add(new Gleitpunktzahl(-3.5)), new Gleitpunktzahl(-2.0));
             //inputAndExpected.put(posInf.add(negInf), nan);
-            // inputAndExpected.put(posInf.sub(posInf), nan);
-            inputAndExpected.put(posInf.add(negInf), nan);
-            inputAndExpected.put(posInf.add(negInf), nan);
+            //inputAndExpected.put(posInf.sub(posInf), nan);
+            // inputAndExpected.put(.add(negInf), nan);
+            Gleitpunktzahl lowel =new Gleitpunktzahl(-0.375);
+            Gleitpunktzahl theni =new Gleitpunktzahl(1.0625);
+            Gleitpunktzahl expected =new Gleitpunktzahl(0.6875);
 
-            inputAndExpected.put(new Gleitpunktzahl( 0.0/0.0), nan);
-   
+            /*(-90, 128, 38);
+            new TestValues(-512,1024,512);
+            new TestValues(-0.375, 1.0625, 0.6875);
+            new TestValues(128, -128, 0);
+            new TestValues(Double.POSITIVE_INFINITY, 0, Double.POSITIVE_INFINITY);
+            new TestValues(-30, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+            new TestValues(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.NaN);
+            inputAndExpected.put(new Gleitpunktzahl( 0.0/0.0), nan);*/
+
             
             testSetDouble(inputAndExpected);
 
@@ -100,11 +109,11 @@ public class Test_Gleitpunktzahl {
         try {
             // Test: Addition
             System.out.println("Test: Addition  x + y");
-            x = new Gleitpunktzahl(3.5);
-            y = new Gleitpunktzahl(0.5);
+            x = new Gleitpunktzahl(-0.375);
+            y = new Gleitpunktzahl(1.0625);
 
             // Referenzwerte setzen
-            gleitref = new Gleitpunktzahl(3.5 + 0.5);
+            gleitref = new Gleitpunktzahl( 0.6875);
             System.out.println(gleitref.toString());
 
             // Berechnung
