@@ -332,16 +332,8 @@ public class Gleitpunktzahl {
             mantisse += rightestBit;
             exponent += 1;
         }
-        if (exponent <0) {
-            //betrachte der fall, wo e'==-1, da wir mit e'= e-1 arbeiten
-            if (exponent == -1) {
-                this.mantisse = getMinNumberMantisse();
-                this.exponent = 0;
-                return;
-            }
-            this.setNaN();
-            return;
-        }
+
+
         while (mantisse < getMinNumberMantisse()) {
             if(mantisse == 0) {
                 break;
@@ -350,12 +342,13 @@ public class Gleitpunktzahl {
             exponent -= 1;
         }
 
-        // Sonderfälle filtern
-        if(mantisse == 0 && exponent == 0) this.setNull();
-        else if(isInfinite()) this.setInfinite(vorzeichen);
-        else if(isNaN() ||exponent > maxExponent ||exponent < 0) {
-            this.setNaN();
+        if (exponent <0) {
+            //betrachte der fall, wo e'==-1, da wir mit e'= e-1 arbeiten
+            this.setNull();
+            return;
         }
+        // Sonderfälle filtern
+       if ( exponent>=maxExponent) this.setInfinite(vorzeichen);
 
     }
 
@@ -400,14 +393,6 @@ public class Gleitpunktzahl {
         // der Sonderfall NaN wird nicht betrachtet
 
         Gleitpunktzahl result = new Gleitpunktzahl();
-        //this >>>>r oder r=0
-        if (r.isNull() || this.isInfinite()|| this.isNaN()){
-            return this;
-        }
-        if (this.isNull() || r.isInfinite()|| r.isNaN()){
-            return r;
-        }
-        // NaN =-inf +inf
         if (this.isInfinite() &&r.isInfinite() ){
             if(this.vorzeichen !=r.vorzeichen){
                 result.setNaN();
@@ -417,6 +402,15 @@ public class Gleitpunktzahl {
             }
             return result;
         }
+        //this >>>>r oder r=0
+        if (r.isNull() || this.isInfinite()|| this.isNaN()){
+            return this;
+        }
+        if (this.isNull() || r.isInfinite()|| r.isNaN()){
+            return r;
+        }
+        // NaN =-inf +inf
+
 
         denormalisiere(this, r);
         result.exponent=r.exponent;

@@ -19,7 +19,8 @@ public class FastMath {
      * In literature, several of those constants for floats or doubles can be
      * found. There's no optimal constant for all cases.
      */
-    private static int MAGIC_NUMBER = 1024;
+    // Magic number = 2670>>1: das äquivalent zu 0x5f3759df ohne die Newton Schritte durchzuführen
+    private static int MAGIC_NUMBER =1335;
 
     /**
      * belegt die MAGIC_NUMBER mit dem Wert magic
@@ -58,8 +59,6 @@ public class FastMath {
             return x;
         }
 
-
-        setMagic(2670>>1);
         int ieee= gleitpunktzahlToIEEE(x);
         ieee >>=1;
         int ieee1 = MAGIC_NUMBER -ieee;
